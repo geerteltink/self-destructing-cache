@@ -2,6 +2,8 @@
     "manifest_version": 3,
     "name": "Self-Destructing Cache",
     "description": "An extension which deletes cookies and cache after closing a site.",
+    "author": "Geert Eltink",
+    "homepage_url": "https://github.com/geerteltink/self-destructing-cache",
     "version": "1.0",
     "permissions": [
         "cookies",
