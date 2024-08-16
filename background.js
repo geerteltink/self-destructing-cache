@@ -168,7 +168,7 @@ function setDomainForTab(tabId, url) {
  * @return {void}
  */
 function scheduleDomainCleanup(domain) {
-    if (whitelist.some(whitelistedDomain => domain.includes(whitelistedDomain))) {
+    if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(domain))) {
         console.log(`skipping scheduling cleanup for excluded domain ${domain}`);
         return;
     }
@@ -187,7 +187,7 @@ function scheduleDomainCleanup(domain) {
  * @return {void}
  */
 function cleanupDomain(domain) {
-    if (whitelist.some(whitelistedDomain => domain.includes(whitelistedDomain))) {
+    if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(domain))) {
         delete scheduledDomains[domain];
         console.info(`skipping cleanup for excluded domain ${domain}`);
         return;
