@@ -1,22 +1,39 @@
 //import './scripts/tools.js';
 
 const excludeOrigins = [
+    // Google
     "https://myaccount.google.com",
     "https://accounts.google.com",
     "https://mail.google.com",
     "https://calendar.google.com",
     "https://keep.google.com",
-    "https://app.simplelogin.io",
-    "https://www.getpocket.com",
-    "https://www.feedly.com",
+    // Microsoft
+    "https://www.office.com",
+    "https://www.sharepoint.de",
+    "https://www.live.com",
+    "https://www.bing.com",
+    "https://myaccount.microsoft.com",
+    // Work
+    "https://www.ottonova.de",
+    "https://www.on.ag",
+    "https://www.miro.com",
+    "https://1password.com",
+    "https://app.yoffix.com",
+    // Proton
     "https://www.proton.me",
-    "https://mail.proton.me",
     "https://account.proton.me",
     "https://account-api.proton.me",
+    "https://mail.proton.me",
+    "https://app.simplelogin.io",
+    // Others
+    "https://myprivacy.dpgmedia.nl",
+    "https://www.feedly.com",
+    "https://www.getpocket.com",
     "https://www.github.com",
-    "https://www.nzbgeek.info",
-    "https://myprivacy.dpgmedia.nl"
+    "https://www.nzbgeek.info"
 ];
+
+const whitelist = excludeOrigins.map(url => new URL(url).hostname.replace("www.", ""));
 
 const dataToRemove = {
     "cache": true,
@@ -27,10 +44,6 @@ const dataToRemove = {
     "localStorage": true,
     "serviceWorkers": true,
     "webSQL": true
-    //appcache: true,
-    //downloads: true,
-    //formData: true,
-    //history: true,
 };
 
 // Clear browsing data on extension loading
@@ -115,9 +128,9 @@ const onTabRemoved = function (tabId, removeInfo) {
  */
 function getDomainFromUrl(url) {
     let hostname = new URL(url).hostname;
-    let domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\-_]{3,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/)[1];
+    //let domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\-_]{3,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/)[1];
 
-    return domain.replace("www.", "");
+    return hostname.replace("www.", "");
 }
 
 /**
@@ -149,13 +162,13 @@ function setDomainForTab(tabId, url) {
 }
 
 /**
- * Schedules a domain for cleanup.
+ * Schedule a domain for cleanup.
  *
  * @param {string} domain - the domain to be scheduled for cleanup
  * @return {void}
  */
 function scheduleDomainCleanup(domain) {
-    if (excludeOrigins.some(url => url.includes(domain))) {
+    if (whitelist.some(whitelistedDomain => domain.includes(whitelistedDomain))) {
         console.log(`skipping scheduling cleanup for excluded domain ${domain}`);
         return;
     }
@@ -174,7 +187,7 @@ function scheduleDomainCleanup(domain) {
  * @return {void}
  */
 function cleanupDomain(domain) {
-    if (excludeOrigins.some(url => url.includes(domain))) {
+    if (whitelist.some(whitelistedDomain => domain.includes(whitelistedDomain))) {
         delete scheduledDomains[domain];
         console.info(`skipping cleanup for excluded domain ${domain}`);
         return;
@@ -189,8 +202,10 @@ function cleanupDomain(domain) {
     chrome.browsingData.remove(
         {
             "origins": [
+                `https://www.${domain}`,
                 `https://${domain}`,
-                `http://${domain}`
+                `http://www.${domain}`,
+                `http://${domain}`,
             ],
         },
         dataToRemove,
