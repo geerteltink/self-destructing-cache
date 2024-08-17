@@ -60,6 +60,7 @@ chrome.browsingData.remove(
 
 const activeTabs = [];
 const scheduledDomains = [];
+const cleanupInterval = 1 * 60 * 1000;
 
 /**
  * Handles the event when a tab is activated.
@@ -121,18 +122,6 @@ const onTabRemoved = function (tabId, removeInfo) {
     delete activeTabs[tabId];
 
     console.debug(activeTabs, scheduledDomains);
-}
-
-/**
- * Extracts the domain from a given URL.
- *
- * @param {string} url - the URL to extract the domain from
- * @return {string} the extracted domain
- */
-function getDomainFromUrl(url) {
-    const domain = getHostname(url).match(/^(?:.*?\.)?([a-zA-Z0-9\-_]{3,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/)[1];
-
-    return domain.replace("www.", "");
 }
 
 /**
@@ -207,7 +196,7 @@ function scheduleDomainCleanup(domain) {
 
     console.info(`scheduling domain ${domain} for cleanup`);
 
-    scheduledDomains[domain] = Date.now() + 5 * 60 * 1000;
+    scheduledDomains[domain] = Date.now() + cleanupInterval;
 
     console.debug(activeTabs, scheduledDomains);
 }
