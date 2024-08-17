@@ -55,7 +55,7 @@ chrome.browsingData.remove(
         "excludeOrigins": excludeOrigins
     },
     { ...cookiesToRemove, ...dataToRemove },
-    () => { console.log(`cache and cookies cleared on startup`); }
+    () => { console.log(`[all] cookies and data destroyed on startup`); }
 );
 
 const activeTabs = [];
@@ -172,7 +172,7 @@ function setDomainForTab(tabId, url) {
     }
 
     if (currentDomain !== previousDomain) {
-        console.debug(`set domain ${currentDomain} for tab ${tabId}`);
+        console.debug(`[${currentDomain}] set domain for tab ${tabId}`);
     }
 
     activeTabs[tabId] = currentDomain;
@@ -190,11 +190,11 @@ function setDomainForTab(tabId, url) {
 function scheduleDomainCleanup(domain) {
     const rootDomain = getRootDomain(domain);
     if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
-        console.log(`skipping scheduling cleanup for excluded domain ${rootDomain}`);
+        console.log(`[${rootDomain}] skipping destructing excluded domain`);
         return;
     }
 
-    console.info(`scheduling domain ${domain} for cleanup`);
+    console.info(`[${domain}] scheduling for destruction`);
 
     scheduledDomains[domain] = Date.now() + cleanupInterval;
 
@@ -211,14 +211,14 @@ function cleanupDomain(domain) {
     const rootDomain = getRootDomain(domain);
     if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
         delete scheduledDomains[domain];
-        console.log(`skipping scheduling cleanup for excluded domain ${rootDomain}`);
+        console.log(`[${rootDomain}] skipping destructing excluded domain`);
         return;
     }
 
     // Don't remove data if any tab has the domain open
     if (activeTabs.some(url => url.includes(domain))) {
         delete scheduledDomains[domain];
-        console.log(`skipping data cleanup for active domain ${domain}`);
+        console.log(`[${domain}] skipping data destruction for active domain`);
         return;
     }
 
@@ -230,13 +230,13 @@ function cleanupDomain(domain) {
             ],
         },
         dataToRemove,
-        () => { console.info(`domain ${domain} data was cleaned up`); }
+        () => { console.info(`[${domain}] data destroyed`); }
     );
 
     // Don't remove cookies if any tab has the root domain open
     if (activeTabs.some(url => url.includes(rootDomain))) {
         delete scheduledDomains[domain];
-        console.log(`skipping cookie cleanup for active domain ${domain}`);
+        console.log(`[${domain}] skipping cookie destruction for active domain`);
         return;
     }
 
@@ -250,7 +250,7 @@ function cleanupDomain(domain) {
             ],
         },
         { ...cookiesToRemove, ...dataToRemove },
-        () => { console.info(`domain ${domain} cookies and data destroyed`); }
+        () => { console.info(`[${domain}] cookies and data destroyed`); }
     );
 
     delete scheduledDomains[domain];
