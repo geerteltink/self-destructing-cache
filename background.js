@@ -35,10 +35,13 @@ const excludeOrigins = [
 
 const whitelist = excludeOrigins.map(url => new URL(url).hostname.replace("www.", ""));
 
+const cookiesToRemove = {
+    "cookies": true
+};
+
 const dataToRemove = {
     "cache": true,
     "cacheStorage": true,
-    "cookies": true,
     "fileSystems": true,
     "indexedDB": true,
     "localStorage": true,
@@ -46,12 +49,12 @@ const dataToRemove = {
     "webSQL": true
 };
 
-// Clear browsing data on extension loading
+// Clear all browsing data on extension loading
 chrome.browsingData.remove(
     {
         "excludeOrigins": excludeOrigins
     },
-    dataToRemove,
+    { ...cookiesToRemove, ...dataToRemove },
     () => { console.log(`cache and cookies cleared on startup`); }
 );
 
@@ -127,8 +130,36 @@ const onTabRemoved = function (tabId, removeInfo) {
  * @return {string} the extracted domain
  */
 function getDomainFromUrl(url) {
-    let hostname = new URL(url).hostname;
-    //let domain = hostname.match(/^(?:.*?\.)?([a-zA-Z0-9\-_]{3,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/)[1];
+    const domain = getHostname(url).match(/^(?:.*?\.)?([a-zA-Z0-9\-_]{3,}\.(?:\w{2,8}|\w{2,4}\.\w{2,4}))$/)[1];
+
+    return domain.replace("www.", "");
+}
+
+/**
+ * Extracts the root domain from a given hostname.
+ *
+ * @param {string} hostname - the hostname to extract the root domain from
+ * @return {string} the extracted root domain
+ */
+function getRootDomain(hostname) {
+    const elems = hostname.split('.');
+    const iMax = elems.length - 1;
+
+    const elem1 = elems[iMax - 1];
+    const elem2 = elems[iMax];
+
+    const isSecondLevelDomain = iMax >= 3 && (elem1 + elem2).length <= 5;
+    return (isSecondLevelDomain ? elems[iMax - 2] + '.' : '') + elem1 + '.' + elem2;
+}
+
+/**
+ * Extracts the hostname from a given URL.
+ *
+ * @param {string} url - the URL to extract the hostname from
+ * @return {string} the extracted hostname
+ */
+function getHostname(url) {
+    const hostname = new URL(url).hostname;
 
     return hostname.replace("www.", "");
 }
@@ -145,7 +176,7 @@ function setDomainForTab(tabId, url) {
         return;
     }
 
-    const currentDomain = getDomainFromUrl(url);
+    const currentDomain = getHostname(url);
     const previousDomain = activeTabs[tabId] ?? null;
     if (previousDomain && currentDomain !== previousDomain) {
         scheduleDomainCleanup(previousDomain);
@@ -168,8 +199,9 @@ function setDomainForTab(tabId, url) {
  * @return {void}
  */
 function scheduleDomainCleanup(domain) {
-    if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(domain))) {
-        console.log(`skipping scheduling cleanup for excluded domain ${domain}`);
+    const rootDomain = getRootDomain(domain);
+    if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
+        console.log(`skipping scheduling cleanup for excluded domain ${rootDomain}`);
         return;
     }
 
@@ -187,29 +219,49 @@ function scheduleDomainCleanup(domain) {
  * @return {void}
  */
 function cleanupDomain(domain) {
-    if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(domain))) {
+    const rootDomain = getRootDomain(domain);
+    if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
         delete scheduledDomains[domain];
-        console.info(`skipping cleanup for excluded domain ${domain}`);
+        console.log(`skipping scheduling cleanup for excluded domain ${rootDomain}`);
         return;
     }
 
+    // Don't remove data if any tab has the domain open
     if (activeTabs.some(url => url.includes(domain))) {
         delete scheduledDomains[domain];
-        console.info(`skipping cleanup for active domain ${domain}`);
+        console.log(`skipping data cleanup for active domain ${domain}`);
         return;
     }
 
     chrome.browsingData.remove(
         {
             "origins": [
-                `https://www.${domain}`,
                 `https://${domain}`,
-                `http://www.${domain}`,
                 `http://${domain}`,
             ],
         },
         dataToRemove,
-        () => { console.info(`domain ${domain} was cleaned up`); }
+        () => { console.info(`domain ${domain} data was cleaned up`); }
+    );
+
+    // Don't remove cookies if any tab has the root domain open
+    if (activeTabs.some(url => url.includes(rootDomain))) {
+        delete scheduledDomains[domain];
+        console.log(`skipping cookie cleanup for active domain ${domain}`);
+        return;
+    }
+
+    chrome.browsingData.remove(
+        {
+            "origins": [
+                `https://www.${rootDomain}`,
+                `http://www.${rootDomain}`,
+                `https://${domain}`,
+                `http://${domain}`,
+            ],
+        },
+        { ...cookiesToRemove, ...dataToRemove },
+        () => { console.info(`domain ${domain} cookies and data destroyed`); }
     );
 
     delete scheduledDomains[domain];
