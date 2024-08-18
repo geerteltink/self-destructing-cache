@@ -1,6 +1,6 @@
 {
     "name": "self-destructing-cache",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "An extension which deletes cookies and cache after closing a site.",
     "main": "background.js",
     "scripts": {
