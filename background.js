@@ -38,7 +38,7 @@ const cookiesToRemove = {
 };
 
 const dataToRemove = {
-  appCache: true,
+  appcache: true,
   cacheStorage: true,
   fileSystems: true,
   indexedDB: true,
