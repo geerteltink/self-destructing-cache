@@ -278,13 +278,13 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 // Register event listeners
-chrome.runtime.onInstalled.addListener(() => {
-  console.assert.log('runtime.onInstalled');
+chrome.runtime.onInstalled.addListener((_details) => {
+  console.log('runtime.onInstalled');
   onStartup();
 });
 chrome.runtime.onStartup.addListener(onStartup);
 chrome.runtime.onSuspend.addListener(() => {
-  console.assert.log('runtime.onSuspend -> cleanupDomains');
+  console.log('runtime.onSuspend -> cleanupDomains');
   cleanupDomains();
 });
 chrome.tabs.onActivated.addListener(onTabActivated);
