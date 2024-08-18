@@ -1,61 +1,61 @@
 //import './scripts/tools.js';
 
 const excludeOrigins = [
-	// Google
-	"https://myaccount.google.com",
-	"https://accounts.google.com",
-	"https://mail.google.com",
-	"https://calendar.google.com",
-	"https://keep.google.com",
-	// Microsoft
-	"https://www.office.com",
-	"https://www.sharepoint.de",
-	"https://www.live.com",
-	"https://www.bing.com",
-	"https://myaccount.microsoft.com",
-	// Work
-	"https://www.ottonova.de",
-	"https://www.on.ag",
-	"https://www.miro.com",
-	"https://1password.com",
-	"https://app.yoffix.com",
-	// Proton
-	"https://www.proton.me",
-	"https://account.proton.me",
-	"https://account-api.proton.me",
-	"https://mail.proton.me",
-	"https://app.simplelogin.io",
-	// Others
-	"https://myprivacy.dpgmedia.nl",
-	"https://www.feedly.com",
-	"https://www.getpocket.com",
-	"https://www.github.com",
-	"https://www.nzbgeek.info"
+  // Google
+  "https://myaccount.google.com",
+  "https://accounts.google.com",
+  "https://mail.google.com",
+  "https://calendar.google.com",
+  "https://keep.google.com",
+  // Microsoft
+  "https://www.office.com",
+  "https://www.sharepoint.de",
+  "https://www.live.com",
+  "https://www.bing.com",
+  "https://myaccount.microsoft.com",
+  // Work
+  "https://www.ottonova.de",
+  "https://www.on.ag",
+  "https://www.miro.com",
+  "https://1password.com",
+  "https://app.yoffix.com",
+  // Proton
+  "https://www.proton.me",
+  "https://account.proton.me",
+  "https://account-api.proton.me",
+  "https://mail.proton.me",
+  "https://app.simplelogin.io",
+  // Others
+  "https://myprivacy.dpgmedia.nl",
+  "https://www.feedly.com",
+  "https://www.getpocket.com",
+  "https://www.github.com",
+  "https://www.nzbgeek.info"
 ];
 
 const whitelist = excludeOrigins.map(url => new URL(url).hostname.replace("www.", ""));
 
 const cookiesToRemove = {
-	"cookies": true
+  "cookies": true
 };
 
 const dataToRemove = {
-	"cache": true,
-	"cacheStorage": true,
-	"fileSystems": true,
-	"indexedDB": true,
-	"localStorage": true,
-	"serviceWorkers": true,
-	"webSQL": true
+  "cache": true,
+  "cacheStorage": true,
+  "fileSystems": true,
+  "indexedDB": true,
+  "localStorage": true,
+  "serviceWorkers": true,
+  "webSQL": true
 };
 
 // Clear all browsing data on extension loading
 chrome.browsingData.remove(
-	{
-		"excludeOrigins": excludeOrigins
-	},
-	{ ...cookiesToRemove, ...dataToRemove },
-	() => { console.log(`[all] cookies and data destroyed on startup`); }
+  {
+    "excludeOrigins": excludeOrigins
+  },
+  { ...cookiesToRemove, ...dataToRemove },
+  () => { console.log(`[all] cookies and data destroyed on startup`); }
 );
 
 const activeTabs = [];
@@ -69,8 +69,8 @@ const cleanupInterval = 1 * 60 * 1000;
  * @return {void}
  */
 const onTabActivated = function (activeInfo) {
-	console.debug("tabs.onActivated", activeInfo);
-	chrome.tabs.get(activeInfo.tabId, onTabInfo);
+  console.debug("tabs.onActivated", activeInfo);
+  chrome.tabs.get(activeInfo.tabId, onTabInfo);
 }
 
 /**
@@ -80,12 +80,12 @@ const onTabActivated = function (activeInfo) {
  * @return {void}
  */
 const onTabInfo = function (tab) {
-	console.debug("tabs.get", tab);
-	if (!tab || !tab.url) {
-		return;
-	}
+  console.debug("tabs.get", tab);
+  if (!tab || !tab.url) {
+    return;
+  }
 
-	setDomainForTab(tab.id, tab.url);
+  setDomainForTab(tab.id, tab.url);
 }
 
 /**
@@ -97,12 +97,12 @@ const onTabInfo = function (tab) {
  * @return {void}
  */
 const onTabUpdated = function (tabId, changeInfo, tab) {
-	console.debug("tabs.onUpdated", tabId, changeInfo, tab);
-	if (!changeInfo.url) {
-		return;
-	}
+  console.debug("tabs.onUpdated", tabId, changeInfo, tab);
+  if (!changeInfo.url) {
+    return;
+  }
 
-	setDomainForTab(tabId, changeInfo.url);
+  setDomainForTab(tabId, changeInfo.url);
 }
 
 /**
@@ -113,15 +113,15 @@ const onTabUpdated = function (tabId, changeInfo, tab) {
  * @return {void}
  */
 const onTabRemoved = function (tabId, removeInfo) {
-	console.debug("tabs.onRemoved", tabId, removeInfo);
-	if (!activeTabs[tabId]) {
-		return;
-	}
+  console.debug("tabs.onRemoved", tabId, removeInfo);
+  if (!activeTabs[tabId]) {
+    return;
+  }
 
-	scheduleDomainCleanup(activeTabs[tabId]);
-	delete activeTabs[tabId];
+  scheduleDomainCleanup(activeTabs[tabId]);
+  delete activeTabs[tabId];
 
-	console.debug(activeTabs, scheduledDomains);
+  console.debug(activeTabs, scheduledDomains);
 }
 
 /**
@@ -131,14 +131,14 @@ const onTabRemoved = function (tabId, removeInfo) {
  * @return {string} the extracted root domain
  */
 function getRootDomain(hostname) {
-	const elems = hostname.split('.');
-	const iMax = elems.length - 1;
+  const elems = hostname.split('.');
+  const iMax = elems.length - 1;
 
-	const elem1 = elems[iMax - 1];
-	const elem2 = elems[iMax];
+  const elem1 = elems[iMax - 1];
+  const elem2 = elems[iMax];
 
-	const isSecondLevelDomain = iMax >= 3 && (elem1 + elem2).length <= 5;
-	return (isSecondLevelDomain ? elems[iMax - 2] + '.' : '') + elem1 + '.' + elem2;
+  const isSecondLevelDomain = iMax >= 3 && (elem1 + elem2).length <= 5;
+  return (isSecondLevelDomain ? elems[iMax - 2] + '.' : '') + elem1 + '.' + elem2;
 }
 
 /**
@@ -148,9 +148,9 @@ function getRootDomain(hostname) {
  * @return {string} the extracted hostname
  */
 function getHostname(url) {
-	const hostname = new URL(url).hostname;
+  const hostname = new URL(url).hostname;
 
-	return hostname.replace("www.", "");
+  return hostname.replace("www.", "");
 }
 
 /**
@@ -161,24 +161,24 @@ function getHostname(url) {
  * @return {void}
  */
 function setDomainForTab(tabId, url) {
-	if (!url.startsWith("https://") && !url.startsWith("http://")) {
-		return;
-	}
+  if (!url.startsWith("https://") && !url.startsWith("http://")) {
+    return;
+  }
 
-	const currentDomain = getHostname(url);
-	const previousDomain = activeTabs[tabId] ?? null;
-	if (previousDomain && currentDomain !== previousDomain) {
-		scheduleDomainCleanup(previousDomain);
-	}
+  const currentDomain = getHostname(url);
+  const previousDomain = activeTabs[tabId] ?? null;
+  if (previousDomain && currentDomain !== previousDomain) {
+    scheduleDomainCleanup(previousDomain);
+  }
 
-	if (currentDomain !== previousDomain) {
-		console.debug(`[${currentDomain}] set domain for tab ${tabId}`);
-	}
+  if (currentDomain !== previousDomain) {
+    console.debug(`[${currentDomain}] set domain for tab ${tabId}`);
+  }
 
-	activeTabs[tabId] = currentDomain;
-	delete scheduledDomains[currentDomain];
+  activeTabs[tabId] = currentDomain;
+  delete scheduledDomains[currentDomain];
 
-	console.debug(activeTabs, scheduledDomains);
+  console.debug(activeTabs, scheduledDomains);
 }
 
 /**
@@ -188,17 +188,17 @@ function setDomainForTab(tabId, url) {
  * @return {void}
  */
 function scheduleDomainCleanup(domain) {
-	const rootDomain = getRootDomain(domain);
-	if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
-		console.log(`[${rootDomain}] skipping destructing excluded domain`);
-		return;
-	}
+  const rootDomain = getRootDomain(domain);
+  if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
+    console.log(`[${rootDomain}] skipping destructing excluded domain`);
+    return;
+  }
 
-	console.info(`[${domain}] scheduling for destruction`);
+  console.info(`[${domain}] scheduling for destruction`);
 
-	scheduledDomains[domain] = Date.now() + cleanupInterval;
+  scheduledDomains[domain] = Date.now() + cleanupInterval;
 
-	console.debug(activeTabs, scheduledDomains);
+  console.debug(activeTabs, scheduledDomains);
 }
 
 /**
@@ -208,72 +208,72 @@ function scheduleDomainCleanup(domain) {
  * @return {void}
  */
 function cleanupDomain(domain) {
-	const rootDomain = getRootDomain(domain);
-	if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
-		delete scheduledDomains[domain];
-		console.log(`[${rootDomain}] skipping destructing excluded domain`);
-		return;
-	}
+  const rootDomain = getRootDomain(domain);
+  if (whitelist.some(whitelistedDomain => whitelistedDomain.includes(rootDomain))) {
+    delete scheduledDomains[domain];
+    console.log(`[${rootDomain}] skipping destructing excluded domain`);
+    return;
+  }
 
-	// Don't remove data if any tab has the domain open
-	if (activeTabs.some(url => url.includes(domain))) {
-		delete scheduledDomains[domain];
-		console.log(`[${domain}] skipping data destruction for active domain`);
-		return;
-	}
+  // Don't remove data if any tab has the domain open
+  if (activeTabs.some(url => url.includes(domain))) {
+    delete scheduledDomains[domain];
+    console.log(`[${domain}] skipping data destruction for active domain`);
+    return;
+  }
 
-	chrome.browsingData.remove(
-		{
-			"origins": [
-				`https://${domain}`,
-				`http://${domain}`,
-			],
-		},
-		dataToRemove,
-		() => { console.info(`[${domain}] data destroyed`); }
-	);
+  chrome.browsingData.remove(
+    {
+      "origins": [
+        `https://${domain}`,
+        `http://${domain}`,
+      ],
+    },
+    dataToRemove,
+    () => { console.info(`[${domain}] data destroyed`); }
+  );
 
-	// Don't remove cookies if any tab has the root domain open
-	if (activeTabs.some(url => url.includes(rootDomain))) {
-		delete scheduledDomains[domain];
-		console.log(`[${domain}] skipping cookie destruction for active domain`);
-		return;
-	}
+  // Don't remove cookies if any tab has the root domain open
+  if (activeTabs.some(url => url.includes(rootDomain))) {
+    delete scheduledDomains[domain];
+    console.log(`[${domain}] skipping cookie destruction for active domain`);
+    return;
+  }
 
-	chrome.browsingData.remove(
-		{
-			"origins": [
-				`https://www.${rootDomain}`,
-				`http://www.${rootDomain}`,
-				`https://${domain}`,
-				`http://${domain}`,
-			],
-		},
-		{ ...cookiesToRemove, ...dataToRemove },
-		() => { console.info(`[${domain}] cookies and data destroyed`); }
-	);
+  chrome.browsingData.remove(
+    {
+      "origins": [
+        `https://www.${rootDomain}`,
+        `http://www.${rootDomain}`,
+        `https://${domain}`,
+        `http://${domain}`,
+      ],
+    },
+    { ...cookiesToRemove, ...dataToRemove },
+    () => { console.info(`[${domain}] cookies and data destroyed`); }
+  );
 
-	delete scheduledDomains[domain];
+  delete scheduledDomains[domain];
 }
 
 // Set alarm
 chrome.alarms.create('cleanup-domains', {
-	delayInMinutes: 1,
-	periodInMinutes: 1
+  delayInMinutes: 1,
+  periodInMinutes: 1
 });
 
 // Register alarm handler
 chrome.alarms.onAlarm.addListener((alarm) => {
-	if (alarm.name !== 'cleanup-domains') {
-		return;
-	}
+  if (alarm.name !== 'cleanup-domains') {
+    return;
+  }
 
-	const now = Date.now();
-	for (const domain in scheduledDomains) {
-		if (scheduledDomains[domain] < now) {
-			cleanupDomain(domain);
-		}
-	}
+  const now = Date.now();
+  for (const domain in scheduledDomains) {
+    if (scheduledDomains[domain] < now) {
+      cleanupDomain(domain);
+    }
+  }
 });
 
 // Register event listeners

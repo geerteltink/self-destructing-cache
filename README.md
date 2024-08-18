@@ -14,15 +14,15 @@ Any not whitelisted site's cookies and data will be destroyed on loading the ext
 
 ## Release
 
--   npm version patch
--   npm version minor
--   npm version major
+- npm version patch
+- npm version minor
+- npm version major
 
 ## Resources
 
--   https://developer.chrome.com/docs/extensions/reference/api
--   https://developer.chrome.com/docs/extensions/reference/api/alarms
--   https://developer.chrome.com/docs/extensions/reference/api/browsingData
--   https://developer.chrome.com/docs/extensions/reference/api/tabs
--   https://github.com/GoogleChrome/chrome-extensions-samples
--   https://github.com/Cookie-AutoDelete/Cookie-AutoDelete
+- https://developer.chrome.com/docs/extensions/reference/api
+- https://developer.chrome.com/docs/extensions/reference/api/alarms
+- https://developer.chrome.com/docs/extensions/reference/api/browsingData
+- https://developer.chrome.com/docs/extensions/reference/api/tabs
+- https://github.com/GoogleChrome/chrome-extensions-samples
+- https://github.com/Cookie-AutoDelete/Cookie-AutoDelete
