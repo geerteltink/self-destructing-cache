@@ -12,6 +12,12 @@ If the full domain is not active anywhere else, the storage will be destroyed.
 If the root domain is not active anywhere else, the cookies will be destroyed.
 Any not whitelisted site's cookies and data will be destroyed on loading the extension.
 
+## Release
+
+- npm version patch
+- npm version minor
+- npm version major
+
 ## Resources
 
 - https://developer.chrome.com/docs/extensions/reference/api
