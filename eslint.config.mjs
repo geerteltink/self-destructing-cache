@@ -16,6 +16,12 @@ export default [
         ...globals.browser,
         ...globals.webextensions
       }
-    }
+    },
+    rules: {
+      'no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ]
+    },
   },
 ];

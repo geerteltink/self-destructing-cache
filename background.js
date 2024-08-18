@@ -69,7 +69,6 @@ const cleanupInterval = 1 * 60 * 1000;
  * @return {void}
  */
 const onTabActivated = function (activeInfo) {
-  console.debug('tabs.onActivated', activeInfo);
   chrome.tabs.get(activeInfo.tabId, onTabInfo);
 };
 
@@ -80,7 +79,6 @@ const onTabActivated = function (activeInfo) {
  * @return {void}
  */
 const onTabInfo = function (tab) {
-  console.debug('tabs.get', tab);
   if (!tab || !tab.url) {
     return;
   }
@@ -96,8 +94,7 @@ const onTabInfo = function (tab) {
  * @param {object} tab - The updated tab object.
  * @return {void}
  */
-const onTabUpdated = function (tabId, changeInfo, tab) {
-  console.debug('tabs.onUpdated', tabId, changeInfo, tab);
+const onTabUpdated = function (tabId, changeInfo, _tab) {
   if (!changeInfo.url) {
     return;
   }
@@ -112,16 +109,13 @@ const onTabUpdated = function (tabId, changeInfo, tab) {
  * @param {object} removeInfo - Information about the removal.
  * @return {void}
  */
-const onTabRemoved = function (tabId, removeInfo) {
-  console.debug('tabs.onRemoved', tabId, removeInfo);
+const onTabRemoved = function (tabId, _removeInfo) {
   if (!activeTabs[tabId]) {
     return;
   }
 
   scheduleDomainCleanup(activeTabs[tabId]);
   delete activeTabs[tabId];
-
-  console.debug(activeTabs, scheduledDomains);
 };
 
 /**
@@ -171,14 +165,8 @@ function setDomainForTab(tabId, url) {
     scheduleDomainCleanup(previousDomain);
   }
 
-  if (currentDomain !== previousDomain) {
-    console.debug(`[${currentDomain}] set domain for tab ${tabId}`);
-  }
-
   activeTabs[tabId] = currentDomain;
   delete scheduledDomains[currentDomain];
-
-  console.debug(activeTabs, scheduledDomains);
 }
 
 /**
@@ -194,11 +182,8 @@ function scheduleDomainCleanup(domain) {
     return;
   }
 
-  console.info(`[${domain}] scheduling for destruction`);
-
   scheduledDomains[domain] = Date.now() + cleanupInterval;
-
-  console.debug(activeTabs, scheduledDomains);
+  console.info(`[${domain}] scheduled for destruction`);
 }
 
 /**
