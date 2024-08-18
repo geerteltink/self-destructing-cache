@@ -4,6 +4,8 @@
   "description": "An extension which deletes cookies and cache after closing a site.",
   "main": "background.js",
   "scripts": {
+    "eslint": "eslint **/*.js --report-unused-disable-directives --fix",
+    "prettier": "npx prettier **/*.{md,json,js} --write --list-different",
     "version": "node version-bump.mjs && git add manifest.json"
   },
   "keywords": [
@@ -18,5 +20,12 @@
   "bugs": {
     "url": "https://github.com/geerteltink/self-destructing-cache/issues"
   },
-  "homepage": "https://github.com/geerteltink/self-destructing-cache#readme"
+  "homepage": "https://github.com/geerteltink/self-destructing-cache#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3"
+  }
 }
