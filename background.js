@@ -47,20 +47,26 @@ const dataToRemove = {
   webSQL: true,
 };
 
-// Clear all browsing data on extension loading
-chrome.browsingData.remove(
-  {
-    excludeOrigins: excludeOrigins,
-  },
-  { ...cookiesToRemove, ...dataToRemove },
-  () => {
-    console.log(`[all] cookies and data destroyed on startup`);
-  }
-);
-
 const activeTabs = [];
 const scheduledDomains = [];
 const cleanupInterval = 1 * 60 * 1000;
+
+/**
+ * Clears all browsing data on extension loading.
+ *
+ * @return {void}
+ */
+const onStartup = function () {
+  chrome.browsingData.remove(
+    {
+      excludeOrigins: excludeOrigins,
+    },
+    { ...cookiesToRemove, ...dataToRemove },
+    () => {
+      console.log(`[all] cookies and data destroyed on startup`);
+    }
+  );
+};
 
 /**
  * Handles the event when a tab is activated.
@@ -187,6 +193,20 @@ function scheduleDomainCleanup(domain) {
 }
 
 /**
+ * Cleans up the browsing data for all scheduled domains that have exceeded their cleanup interval.
+ *
+ * @return {void}
+ */
+function cleanupDomains() {
+  const now = Date.now();
+  for (const domain in scheduledDomains) {
+    if (scheduledDomains[domain] < now) {
+      cleanupDomain(domain);
+    }
+  }
+}
+
+/**
  * Cleans up the browsing data for a given domain.
  *
  * @param {string} domain - the domain to be cleaned up
@@ -254,15 +274,15 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     return;
   }
 
-  const now = Date.now();
-  for (const domain in scheduledDomains) {
-    if (scheduledDomains[domain] < now) {
-      cleanupDomain(domain);
-    }
-  }
+  cleanupDomains();
 });
 
 // Register event listeners
+chrome.runtime.onStartup.addListener(onStartup);
+chrome.runtime.onSuspend.addListener(() => {
+  console.assert.log('runtime.onSuspend -> cleanupDomains');
+  cleanupDomains();
+});
 chrome.tabs.onActivated.addListener(onTabActivated);
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 chrome.tabs.onRemoved.addListener(onTabRemoved);
