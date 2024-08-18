@@ -278,6 +278,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 // Register event listeners
+chrome.runtime.onInstalled.addListener(() => {
+  console.assert.log('runtime.onInstalled');
+  onStartup();
+});
 chrome.runtime.onStartup.addListener(onStartup);
 chrome.runtime.onSuspend.addListener(() => {
   console.assert.log('runtime.onSuspend -> cleanupDomains');
