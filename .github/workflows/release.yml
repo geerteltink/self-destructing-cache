@@ -1,0 +1,30 @@
+permissions:
+  contents: write
+
+name: Release Self-Destructing Cache Extension
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Zip assets
+        run: |
+          zip self-destructing-cache.zip background.js manifest.json README.md images/*
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --generate-notes \
+            --latest \
+            self-destructing-cache.zip
