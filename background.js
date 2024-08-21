@@ -51,6 +51,8 @@ const activeTabs = [];
 const scheduledDomains = [];
 const cleanupInterval = 1 * 60 * 1000;
 
+console.log('background.js started');
+
 /**
  * Clears all browsing data on extension loading.
  *
@@ -270,6 +272,7 @@ chrome.alarms.create('cleanup-domains', {
 
 // Register alarm handler
 chrome.alarms.onAlarm.addListener((alarm) => {
+  console.log(`alarms.onAlarm: ${alarm.name}`);
   if (alarm.name !== 'cleanup-domains') {
     return;
   }

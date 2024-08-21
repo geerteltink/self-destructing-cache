@@ -25,3 +25,5 @@ destroyed on loading the extension.
 - https://developer.chrome.com/docs/extensions/reference/api/tabs
 - https://github.com/GoogleChrome/chrome-extensions-samples
 - https://github.com/Cookie-AutoDelete/Cookie-AutoDelete
+- https://vite-plugin-web-extension.aklinker1.io/guide/
+- https://github.com/aklinker1/vite-plugin-web-extension/tree/main/packages/demo-vanilla

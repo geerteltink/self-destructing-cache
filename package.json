@@ -23,6 +23,7 @@
   "homepage": "https://github.com/geerteltink/self-destructing-cache#readme",
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "chrome-types": "^0.1.299",
     "eslint": "^9.9.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.9.0",
