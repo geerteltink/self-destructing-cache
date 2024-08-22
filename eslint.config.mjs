@@ -2,13 +2,11 @@
 
 import globals from "globals";
 import eslint from '@eslint/js';
-import prettierConfig from 'eslint-config-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import tseslint from 'typescript-eslint';
 
 export default [
-  eslint.configs.recommended,
-  prettierConfig,
   {
-    ignores: ['.git/**', '.github/**', 'node_modules/**'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -17,11 +15,24 @@ export default [
         ...globals.webextensions
       }
     },
-    rules: {
-      'no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
-      ]
-    },
   },
+  {
+    ignores: ['.git/**', '.github/**', 'dist', 'node_modules'],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  eslintConfigPrettier,
+  {
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'warn',
+        { fixStyle: 'inline-type-imports', disallowTypeAnnotations: false },
+      ],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      "no-unused-vars": "off",
+    },
+  }
 ];
