@@ -23,7 +23,7 @@ jobs:
       - run: npm run build
       - name: Zip assets
         run: |
-          zip self-destructing-cache.zip dist/*
+          cd dist ; zip -r ../self-destructing-cache.zip . *
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
