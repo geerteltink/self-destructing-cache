@@ -6,7 +6,7 @@ name: Release Self-Destructing Cache Extension
 on:
   push:
     tags:
-      - "*"
+      - '*'
 
 jobs:
   build:
@@ -14,11 +14,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run build
       - name: Zip assets
         run: |
-          zip self-destructing-cache.zip background.js manifest.json README.md images/*
-
+          zip self-destructing-cache.zip dist/*
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
