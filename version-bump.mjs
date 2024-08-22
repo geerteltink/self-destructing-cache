@@ -4,6 +4,6 @@ import process from "process";
 const targetVersion = process.env.npm_package_version;
 
 // read minAppVersion from manifest.json and bump version to target version
-let manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
+let manifest = JSON.parse(readFileSync("./src/manifest.json", "utf8"));
 manifest.version = targetVersion;
-writeFileSync("manifest.json", JSON.stringify(manifest, null, 2));
+writeFileSync("./src/manifest.json", JSON.stringify(manifest, null, 2));
