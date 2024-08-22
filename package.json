@@ -1,12 +1,28 @@
 {
-  "name": "Example Extension",
+  "name": "self-destructing-cache",
+  "version": "1.3.3",
+  "description": "An extension which deletes cookies and cache after closing a site.",
+  "keywords": [
+    "chrome",
+    "self-destructing",
+    "cache",
+    "cookies",
+    "data"
+  ],
+  "main": "background.js",
   "type": "module",
+  "author": "Geert Eltink",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geerteltink/self-destructing-cache/issues"
+  },
+  "homepage": "https://github.com/geerteltink/self-destructing-cache#readme",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "eslint": "eslint **/*.{js,mjs,ts} --report-unused-disable-directives --fix",
     "prettier": "npx prettier **/*.{md,json,js,ts} --write --list-different",
-    "version": "node version-bump.mjs && git add manifest.json"
+    "version": "node version-bump.mjs && git add src/manifest.json"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
