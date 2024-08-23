@@ -18,8 +18,9 @@ export async function onActivated(
     const currentHostname = getHostname(tab.url);
     const previousHostname = await getActiveTab(activeInfo.tabId);
     if (previousHostname && previousHostname !== currentHostname) {
-      console.log(`[${currentHostname}] tab ${tab.id} domain changed`);
       await scheduleDomainForDestruction(previousHostname);
+      console.log(`[${previousHostname}] scheduled for destruction`);
+      console.log(`[${currentHostname}] tab ${tab.id} domain changed`);
     }
 
     await setActiveTab(activeInfo.tabId, currentHostname);
@@ -38,8 +39,9 @@ export async function onTabUpdated(
   const currentHostname = getHostname(changeInfo.url);
   const previousHostname = await getActiveTab(tabId);
   if (previousHostname && previousHostname !== currentHostname) {
-    console.log(`[${currentHostname}] tab ${tabId} domain changed`);
     await scheduleDomainForDestruction(previousHostname);
+    console.log(`[${previousHostname}] scheduled for destruction`);
+    console.log(`[${currentHostname}] tab ${tabId} domain changed`);
   }
 
   await setActiveTab(tabId, currentHostname);
