@@ -115,7 +115,6 @@ export async function destroyData(): Promise<void> {
         includeCookies = false;
       }
 
-      console.log(`hostname ${hostname} is scheduled for destruction`);
       await destroyDataForDomain(hostname, includeCookies);
       await unscheduleDomainForDestruction(hostname);
     }
