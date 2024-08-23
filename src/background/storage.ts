@@ -96,7 +96,3 @@ export async function unscheduleDomainForDestruction(hostname: string): Promise<
     [StorageKey.ScheduledDomains]: scheduledDomains,
   });
 }
-
-export async function dumpStorage(): Promise<void> {
-  console.log(await browser.storage.session.get());
-}
