@@ -1,6 +1,6 @@
 {
   "name": "self-destructing-cache",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "An extension which deletes cookies and cache after closing a site.",
   "keywords": [
     "chrome",
