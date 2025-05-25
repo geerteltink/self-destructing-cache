@@ -3,30 +3,31 @@ import { getActiveTabs, getScheduledDomains, unscheduleDomainForDestruction } fr
 
 const excludeOrigins: string[] = [
   // Google
-  'https://myaccount.google.com',
   'https://accounts.google.com',
-  'https://mail.google.com',
   'https://calendar.google.com',
   'https://keep.google.com',
+  'https://mail.google.com',
+  'https://myaccount.google.com',
   // Microsoft
+  'https://myaccount.microsoft.com',
+  'https://www.bing.com',
+  'https://www.live.com',
   'https://www.office.com',
   'https://www.sharepoint.de',
-  'https://www.live.com',
-  'https://www.bing.com',
-  'https://myaccount.microsoft.com',
   // Work
-  'https://www.ottonova.de',
-  'https://www.on.ag',
-  'https://www.miro.com',
   'https://1password.com',
   'https://app.yoffix.com',
+  'https://www.miro.com',
+  'https://www.on.ag',
+  'https://www.ottonova.de',
   // Proton
-  'https://www.proton.me',
-  'https://account.proton.me',
   'https://account-api.proton.me',
-  'https://mail.proton.me',
+  'https://account.proton.me',
   'https://app.simplelogin.io',
+  'https://mail.proton.me',
+  'https://www.proton.me',
   // Others
+  'https://linkedin.com',
   'https://myprivacy.dpgmedia.nl',
   'https://www.feedly.com',
   'https://www.getpocket.com',
@@ -36,9 +37,7 @@ const excludeOrigins: string[] = [
 
 const whitelist = excludeOrigins.map((url) => new URL(url).hostname.replace('www.', ''));
 
-const cookiesToRemove: chrome.browsingData.DataTypeSet = {
-  cookies: true,
-};
+const cookiesToRemove: chrome.browsingData.DataTypeSet = { cookies: true };
 
 const cacheToRemove: chrome.browsingData.DataTypeSet = {
   appcache: true,
@@ -53,12 +52,7 @@ const cacheToRemove: chrome.browsingData.DataTypeSet = {
 export async function destroyAllData(): Promise<void> {
   // TODO: does the browser polyfill support excluding origins?
   await chrome.browsingData
-    .remove(
-      {
-        excludeOrigins: excludeOrigins,
-      },
-      { ...cacheToRemove, ...cookiesToRemove }
-    )
+    .remove({ excludeOrigins: excludeOrigins }, { ...cacheToRemove, ...cookiesToRemove })
     .then(() => {
       console.log(`[*] all cookies and data destroyed`);
     });
@@ -75,16 +69,9 @@ export async function destroyDataForDomain(domain: string, includeCookies: boole
   }
 
   // TODO: convert to browser polyfill
-  await chrome.browsingData
-    .remove(
-      {
-        origins: origins,
-      },
-      dataToRemove
-    )
-    .then(() => {
-      console.log(`[${domain}] data destroyed`);
-    });
+  await chrome.browsingData.remove({ origins: origins }, dataToRemove).then(() => {
+    console.log(`[${domain}] data destroyed`);
+  });
 }
 
 export async function destroyData(): Promise<void> {
