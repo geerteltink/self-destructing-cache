@@ -15,24 +15,23 @@ const excludeOrigins: string[] = [
   'https://www.office.com',
   'https://www.sharepoint.de',
   // Work
-  'https://1password.com',
   'https://app.yoffix.com',
+  'https://www.1password.com',
   'https://www.miro.com',
-  'https://www.on.ag',
-  'https://www.ottonova.de',
   // Proton
   'https://account-api.proton.me',
   'https://account.proton.me',
   'https://app.simplelogin.io',
+  'https://calendar.proton.me',
   'https://mail.proton.me',
+  'https://pass.proton.me/',
   'https://www.proton.me',
   // Others
   'https://linkedin.com',
   'https://myprivacy.dpgmedia.nl',
-  'https://www.feedly.com',
-  'https://www.getpocket.com',
   'https://www.github.com',
-  'https://www.nzbgeek.info',
+  'https://www.nos.nl',
+  'https://www.nu.nl',
 ];
 
 const whitelist = excludeOrigins.map((url) => new URL(url).hostname.replace('www.', ''));
