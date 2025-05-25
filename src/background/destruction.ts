@@ -2,6 +2,15 @@ import { getRootDomain } from './utils';
 import { getActiveTabs, getScheduledDomains, unscheduleDomainForDestruction } from './storage';
 
 const excludeOrigins: string[] = [
+  // Proton
+  'https://account-api.proton.me',
+  'https://account.proton.me',
+  'https://app.simplelogin.io',
+  'https://calendar.proton.me',
+  'https://drive.proton.me/',
+  'https://mail.proton.me',
+  'https://pass.proton.me/',
+  'https://www.proton.me',
   // Google
   'https://accounts.google.com',
   'https://calendar.google.com',
@@ -14,22 +23,14 @@ const excludeOrigins: string[] = [
   'https://www.live.com',
   'https://www.office.com',
   'https://www.sharepoint.de',
-  // Work
+  // Office
   'https://app.yoffix.com',
   'https://www.1password.com',
-  'https://www.miro.com',
-  // Proton
-  'https://account-api.proton.me',
-  'https://account.proton.me',
-  'https://app.simplelogin.io',
-  'https://calendar.proton.me',
-  'https://mail.proton.me',
-  'https://pass.proton.me/',
-  'https://www.proton.me',
-  // Others
-  'https://linkedin.com',
-  'https://myprivacy.dpgmedia.nl',
   'https://www.github.com',
+  'https://www.linkedin.com',
+  'https://www.miro.com',
+  // Others
+  'https://myprivacy.dpgmedia.nl',
   'https://www.nos.nl',
   'https://www.nu.nl',
 ];
