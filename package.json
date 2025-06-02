@@ -25,7 +25,7 @@
     "version": "node version-bump.mjs && git add src/manifest.json"
   },
   "devDependencies": {
-    "@eslint/js": "^9.27.0",
+    "@eslint/js": "^9.28.0",
     "@types/chrome": "^0.0.323",
     "@types/webextension-polyfill": "^0.12.3",
     "eslint": "^9.27.0",
