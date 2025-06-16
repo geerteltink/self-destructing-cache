@@ -28,7 +28,7 @@
     "@eslint/js": "^9.27.0",
     "@types/chrome": "^0.0.323",
     "@types/webextension-polyfill": "^0.12.3",
-    "eslint": "^9.27.0",
+    "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
     "globals": "^16.1.0",
     "prettier": "^3.5.3",
