@@ -1,41 +1,10 @@
 import { getRootDomain } from './utils';
 import { getActiveTabs, getScheduledDomains, unscheduleDomainForDestruction } from './storage';
+import { WHITELISTED_DOMAINS } from './constants';
 
-const excludeOrigins: string[] = [
-  // Proton
-  'https://account-api.proton.me',
-  'https://account.proton.me',
-  'https://app.simplelogin.io',
-  'https://calendar.proton.me',
-  'https://drive.proton.me/',
-  'https://mail.proton.me',
-  'https://pass.proton.me/',
-  'https://www.proton.me',
-  // Google
-  'https://accounts.google.com',
-  'https://calendar.google.com',
-  'https://keep.google.com',
-  'https://mail.google.com',
-  'https://myaccount.google.com',
-  // Microsoft
-  'https://myaccount.microsoft.com',
-  'https://www.bing.com',
-  'https://www.live.com',
-  'https://www.office.com',
-  'https://www.sharepoint.de',
-  // Office
-  'https://app.yoffix.com',
-  'https://www.1password.com',
-  'https://www.github.com',
-  'https://www.linkedin.com',
-  'https://www.miro.com',
-  // Others
-  'https://myprivacy.dpgmedia.nl',
-  'https://www.nos.nl',
-  'https://www.nu.nl',
-];
-
-const whitelist = excludeOrigins.map((url) => new URL(url).hostname.replace('www.', ''));
+const whitelist = WHITELISTED_DOMAINS.map((url: string) =>
+  new URL(url).hostname.replace('www.', '')
+);
 
 const cookiesToRemove: chrome.browsingData.DataTypeSet = { cookies: true };
 
@@ -52,7 +21,7 @@ const cacheToRemove: chrome.browsingData.DataTypeSet = {
 export async function destroyAllData(): Promise<void> {
   // TODO: does the browser polyfill support excluding origins?
   await chrome.browsingData
-    .remove({ excludeOrigins: excludeOrigins }, { ...cacheToRemove, ...cookiesToRemove })
+    .remove({ excludeOrigins: WHITELISTED_DOMAINS }, { ...cacheToRemove, ...cookiesToRemove })
     .then(() => {
       console.log(`[*] all cookies and data destroyed`);
     });
