@@ -20,6 +20,8 @@ export const WHITELISTED_DOMAINS: string[] = [
   'https://www.live.com',
   'https://www.office.com',
   'https://www.sharepoint.de',
+  // Notion
+  'https://www.notion.so',
   // Dev
   'https://www.github.com',
   // Others
