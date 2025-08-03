@@ -15,5 +15,4 @@ jobs:
           cache-dependency-path: package-lock.json
       - run: npm ci
       - run: npm run oxlint
-        continue-on-error: true
       - run: npm run prettier

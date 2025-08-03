@@ -34,7 +34,7 @@ export async function getActiveTab(tabId: number): Promise<string | null> {
     .get(StorageKey.ActiveTabs)
     .then((record) => (record[StorageKey.ActiveTabs] ?? {}) as ActiveTabs);
 
-  return activeTabs[tabId] ?? null;
+  return activeTabs[tabId] ?? undefined;
 }
 
 export async function setActiveTab(tabId: number, hostname: string): Promise<void> {

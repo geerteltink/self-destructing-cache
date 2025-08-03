@@ -60,7 +60,7 @@ export async function destroyData(): Promise<void> {
       }
 
       const activeTabs = Object.values(await getActiveTabs());
-      if (activeTabs.some((host) => host == hostname)) {
+      if (activeTabs.some((host) => host === hostname)) {
         await unscheduleDomainForDestruction(hostname);
         console.log(`[${hostname}] skipping data destruction for active domain`);
         return;
