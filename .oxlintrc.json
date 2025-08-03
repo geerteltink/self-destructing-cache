@@ -1,0 +1,25 @@
+{
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "import",
+    "unicorn",
+    "eslint"
+  ],
+  "categories": {
+    "correctness": "deny",
+    "suspicious": "deny",
+    "perf": "deny"
+  },
+  "settings": {},
+  "rules": {
+    "eqeqeq": "error",
+    "import/no-cycle": "error",
+    "import/namespace": "error",
+    "eslint/no-unused-vars": "off",
+    "eslint/eqeqeq": "error",
+    "eslint/sort-imports": "off",
+    "unicorn/no-null": "error"
+  }
+}
