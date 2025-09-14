@@ -30,7 +30,6 @@
     "zip:edge": "wxt zip -b edge",
     "prettier": "npx prettier **/*.{md,json,js,ts} --write --list-different",
     "oxlint": "oxlint --config=.oxlintrc.json --ignore-path=.oxlintignore",
-    "version": "node version-bump.mjs && git add src/manifest.json",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
