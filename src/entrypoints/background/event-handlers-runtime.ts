@@ -4,5 +4,4 @@ export async function onStartup() {
   await destroyAllData();
 }
 
-export function onSuspend() {
-}
+export function onSuspend() {}

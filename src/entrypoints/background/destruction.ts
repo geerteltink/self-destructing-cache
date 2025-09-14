@@ -8,7 +8,7 @@ const whitelist = WHITELISTED_DOMAINS.map((url: string) =>
 );
 
 const cookiesToRemove: Browser.browsingData.DataTypeSet = {
-  cookies: true
+  cookies: true,
 };
 
 const cacheToRemove: Browser.browsingData.DataTypeSet = {
@@ -67,7 +67,10 @@ export async function destroyData(): Promise<void> {
   });
 }
 
-export async function destroyDataForDomainInChrome(domain: string, includeCookies: boolean): Promise<void> {
+export async function destroyDataForDomainInChrome(
+  domain: string,
+  includeCookies: boolean
+): Promise<void> {
   if (!import.meta.env.CHROME) {
     return;
   }
@@ -91,7 +94,10 @@ export async function destroyDataForDomainInChrome(domain: string, includeCookie
   });
 }
 
-export async function destroyDataForDomainInFirefox(domain: string, includeCookies: boolean): Promise<void> {
+export async function destroyDataForDomainInFirefox(
+  domain: string,
+  includeCookies: boolean
+): Promise<void> {
   if (!import.meta.env.FIREFOX) {
     return;
   }

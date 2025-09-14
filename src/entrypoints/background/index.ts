@@ -1,4 +1,4 @@
-import { browser } from "wxt/browser";
+import { browser } from 'wxt/browser';
 import { onStartup, onSuspend } from './event-handlers-runtime';
 import { onTabRemoved, onActivated, onTabUpdated } from './event-handlers-tabs';
 import { onAlarm } from './event-handlers-alarms';

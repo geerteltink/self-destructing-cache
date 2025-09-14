@@ -7,9 +7,7 @@ import {
   unsetActiveTab,
 } from './storage';
 
-export async function onActivated(
-  activeInfo: { tabId: number }
-): Promise<void> {
+export async function onActivated(activeInfo: { tabId: number }): Promise<void> {
   await browser.tabs.get(activeInfo.tabId).then(async (tab: any): Promise<void> => {
     if (!tab || !tab.url || !isUrl(tab.url)) {
       return;
