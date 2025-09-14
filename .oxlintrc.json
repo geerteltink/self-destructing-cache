@@ -2,11 +2,7 @@
   "env": {
     "browser": true
   },
-  "plugins": [
-    "import",
-    "unicorn",
-    "eslint"
-  ],
+  "plugins": ["import", "unicorn", "eslint"],
   "categories": {
     "correctness": "deny",
     "suspicious": "deny",

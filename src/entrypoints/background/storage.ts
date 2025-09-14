@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import { browser } from 'wxt/browser';
 import { StorageKey } from './types';
 
 interface ActiveTabs {
@@ -83,6 +83,8 @@ export async function scheduleDomainForDestruction(hostname: string): Promise<vo
   await browser.storage.session.set({
     [StorageKey.ScheduledDomains]: scheduledDomains,
   });
+
+  console.log(`⌛ ${hostname} scheduled for destruction`);
 }
 
 export async function unscheduleDomainForDestruction(hostname: string): Promise<void> {

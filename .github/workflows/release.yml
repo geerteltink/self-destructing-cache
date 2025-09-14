@@ -20,10 +20,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npm run build
-      - name: Zip assets
-        run: |
-          cd dist ; zip -r ../self-destructing-cache.zip . *
+      - run: npm run build && npm run zip
+      - run: npm run build:edge && npm run zip:edge
+      - run: npm run build:firefox && npm run zip:firefox
+      - run: npm run build:firefox
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -32,4 +32,4 @@ jobs:
             --title "${{ github.ref_name }}" \
             --generate-notes \
             --latest \
-            self-destructing-cache.zip
+            .output\self-destructing-cache-*.zip

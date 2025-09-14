@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import { browser } from 'wxt/browser';
 import { getHostname, isUrl } from './utils';
 import {
   getActiveTab,
@@ -7,10 +7,8 @@ import {
   unsetActiveTab,
 } from './storage';
 
-export async function onActivated(
-  activeInfo: browser.Tabs.OnActivatedActiveInfoType
-): Promise<void> {
-  await browser.tabs.get(activeInfo.tabId).then(async (tab: browser.Tabs.Tab): Promise<void> => {
+export async function onActivated(activeInfo: { tabId: number }): Promise<void> {
+  await browser.tabs.get(activeInfo.tabId).then(async (tab: any): Promise<void> => {
     if (!tab || !tab.url || !isUrl(tab.url)) {
       return;
     }
@@ -19,8 +17,6 @@ export async function onActivated(
     const previousHostname = await getActiveTab(activeInfo.tabId);
     if (previousHostname && previousHostname !== currentHostname) {
       await scheduleDomainForDestruction(previousHostname);
-      console.log(`[${previousHostname}] scheduled for destruction`);
-      console.log(`[${currentHostname}] tab ${tab.id} domain changed`);
     }
 
     await setActiveTab(activeInfo.tabId, currentHostname);
@@ -29,8 +25,8 @@ export async function onActivated(
 
 export async function onTabUpdated(
   tabId: number,
-  changeInfo: browser.Tabs.OnUpdatedChangeInfoType,
-  _tab: browser.Tabs.Tab
+  changeInfo: Browser.tabs.OnUpdatedInfo,
+  _tab: any
 ): Promise<void> {
   if (!changeInfo.url || !isUrl(changeInfo.url)) {
     return;
@@ -40,8 +36,6 @@ export async function onTabUpdated(
   const previousHostname = await getActiveTab(tabId);
   if (previousHostname && previousHostname !== currentHostname) {
     await scheduleDomainForDestruction(previousHostname);
-    console.log(`[${previousHostname}] scheduled for destruction`);
-    console.log(`[${currentHostname}] tab ${tabId} domain changed`);
   }
 
   await setActiveTab(tabId, currentHostname);
@@ -49,7 +43,7 @@ export async function onTabUpdated(
 
 export async function onTabRemoved(
   tabId: number,
-  _removeInfo: browser.Tabs.OnRemovedRemoveInfoType
+  _removeInfo: Browser.tabs.OnRemovedInfo
 ): Promise<void> {
   const hostname = await getActiveTab(tabId);
   if (!hostname) {
