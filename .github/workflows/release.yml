@@ -32,4 +32,4 @@ jobs:
             --title "${{ github.ref_name }}" \
             --generate-notes \
             --latest \
-            .output\self-destructing-cache-*.zip
+            .output/self-destructing-cache-*.zip
