@@ -16,20 +16,18 @@ export const WHITELISTED_DOMAINS: string[] = [
   'https://myaccount.google.com',
   // Microsoft
   'https://myaccount.microsoft.com',
-  'https://www.bing.com',
   'https://www.live.com',
   'https://www.office.com',
   'https://www.sharepoint.de',
-  // Notion
-  'https://www.notion.so',
+  'https://www.bing.com',
+  'https://www.msn.com',
   // Dev
   'https://www.github.com',
   // Others
-  'https://myprivacy.dpgmedia.nl',
+  //'https://myprivacy.dpgmedia.nl',
   'https://nzbgeek.info',
   'https://www.1password.com',
   'https://www.linkedin.com',
-  'https://www.miro.com',
   'https://www.nos.nl',
   'https://www.nu.nl',
 ];
