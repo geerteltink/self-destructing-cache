@@ -1,4 +1,6 @@
 name: continuous-integration
+permissions:
+  contents: read
 
 on: [push]
 
