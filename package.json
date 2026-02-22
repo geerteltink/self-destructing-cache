@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@wxt-dev/module-vue": "^1.0.3",
-    "oxlint": "^1.41.0",
+    "oxlint": "^1.42.0",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.4",
