@@ -13,5 +13,10 @@ export default defineConfig({
     },
     permissions: ['cookies', 'storage', 'alarms', 'browsingData', 'tabs'],
     host_permissions: ['<all_urls>'],
+    browser_specific_settings: {
+      gecko: {
+        id: "@self-destructing-cache"
+      }
+    }
   },
 });

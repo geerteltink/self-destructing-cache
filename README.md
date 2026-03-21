@@ -11,11 +11,34 @@ domain is not active anywhere else, the storage will be destroyed. If the root d
 anywhere else, the cookies will be destroyed. Any not whitelisted site's cookies and data will be
 destroyed on loading the extension.
 
+## Build
+
+```powershell
+rm .\.output\ -force -recurse; npm run build; npm run zip;
+```
+
 ## How to create a release
 
 - npm version patch && git push --follow-tags
 - npm version minor && git push --follow-tags
 - npm version major && git push --follow-tags
+
+## How to install it
+
+### Firefox
+
+Disable the Signing Requirement.
+
+- In Firefox, go to about:config.
+- Search for: xpinstall.signatures.required.
+- Double-click it to set it to false.
+
+Install it in FireFox.
+
+- In Firefox, go to about:addons.
+- Click the Gear icon ⚙️ (next to "Manage Your Extensions").
+- Select "Install Add-on From File..."
+- Choose the .zip file from the .output/ folder.
 
 ## Resources
 
