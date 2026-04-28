@@ -21,6 +21,10 @@ export const WHITELISTED_DOMAINS: string[] = [
   'https://www.sharepoint.de',
   'https://www.bing.com',
   'https://www.msn.com',
+  // Apple
+  'https://account.apple.com/',
+  'https://appleid.apple.com',
+  'https://www.icloud.com',
   // Dev
   'https://www.github.com',
   // Others
