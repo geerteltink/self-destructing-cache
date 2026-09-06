@@ -35,11 +35,11 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "vue": "^3.5.41"
+    "vue": "^3.5.42"
   },
   "devDependencies": {
     "@wxt-dev/module-vue": "^1.0.3",
-    "oxlint": "^1.80.0",
+    "oxlint": "^1.81.0",
     "prettier": "^3.9.6",
     "typescript": "^7.0.2",
     "vue-tsc": "^3.3.11",
