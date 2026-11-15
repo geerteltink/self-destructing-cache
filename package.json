@@ -1,6 +1,6 @@
 {
   "name": "self-destructing-cache",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "description": "An extension which deletes cookies and cache after closing a site.",
   "keywords": [
     "chrome",
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@wxt-dev/module-vue": "^1.0.3",
     "oxlint": "^1.93.0",
-    "prettier": "^3.10.0",
+    "prettier": "^3.10.1",
     "typescript": "^7.0.2",
     "vue-tsc": "^3.3.14",
     "wxt": "^0.21.5"
